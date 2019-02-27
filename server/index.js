@@ -19,18 +19,24 @@ io.on('connection', socket => {
   });
 
   socket.emit('newMessage', {
-    from: 'fromserver@hotmail.com',
-    text: 'Hey, this is from server',
-    createdAt: new Date().toLocaleDateString()
+    from: 'Admin',
+    text: 'Welcome to the chat app'
   });
 
-  socket.on('createMessage', data => {
-    console.log('createMessage from client', data);
-    io.emit('newMessage', {
-      from: data.from,
-      text: data.text,
-      createdAt: new Date().getTime()
-    });
+  socket.broadcast.emit('newMessage', {
+    from: 'Admin',
+    text: 'New user joined',
+    createdAt: new Date().getTime()
+  });
+
+  socket.on('createMessage', ({ from, text }) => {
+    console.log('createMessage from client', { from, text });
+    
+    socket.broadcast.emit('newMessage', {
+        from,
+        text,
+        createdAt: new Date().getTime()
+    })
   });
 });
 
