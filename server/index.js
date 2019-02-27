@@ -17,6 +17,16 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log('The user has disconnected');
   });
+
+  socket.emit('newMessage', {
+    from: 'fromserver@hotmail.com',
+    text: 'Hey, this is from server',
+    createdAt: new Date().toLocaleDateString()
+  });
+
+  socket.on('createMessage', data => {
+    console.log('createMessage from client', data);
+  });
 });
 
 const port = process.env.PORT || 3000;
