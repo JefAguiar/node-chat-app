@@ -22,12 +22,12 @@ io.on('connection', socket => {
   
   socket.broadcast.emit('newMessage',generateMessage('Admin','New user joined'));
 
-  socket.on('createMessage', ({ from, text }) => {
-    console.log('createMessage from client', { from, text });
-    
-    socket.broadcast.emit('newMessage', generateMessage(from, text));
+  socket.on('createMessage',(message, callback) => {
+    console.log('createMessage from client', message);
+    io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('this is from the server');
   });
-});
+}); 
 
 const port = process.env.PORT || 3000;
 
