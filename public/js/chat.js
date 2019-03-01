@@ -17,7 +17,19 @@ const scrollToBottom = function(){
 };
 
 socket.on('connect', function () {
-  console.log('Connected to the server');
+  const params = jQuery.deparam(window.location.search);
+
+  socket.emit('join', params, function(err){
+    if(err) {
+
+      alert(err);
+      window.location.href = '/';
+    }
+    else {
+      console.log('No error!');
+    }
+      
+  });
 });
 
 socket.on('disconnect', function () {
@@ -51,6 +63,16 @@ socket.on('newLocationMessage', function (data) {
       from: data.from,
       createdAt: moment(data.createdAt).format('h:mm a')
     });
+});
+
+socket.on('updateUserList', function(users){
+  const ol = jQuery('<ol></ol>');
+
+  users.forEach(usr => {
+    ol.append(jQuery('<li></li>').text(usr));
+  });
+
+  jQuery('#users').html(ol);
 });
 
 const messageTextBox = jQuery('[name=message]');
